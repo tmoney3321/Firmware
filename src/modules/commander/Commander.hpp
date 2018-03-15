@@ -93,21 +93,35 @@ private:
 		(ParamFloat<px4::params::COM_POS_FS_EPH>) _eph_threshold,
 		(ParamFloat<px4::params::COM_POS_FS_EPV>) _epv_threshold,
 		(ParamFloat<px4::params::COM_VEL_FS_EVH>) _evh_threshold,
+
+		(ParamInt<px4::params::COM_POS_FS_DELAY>) _failsafe_pos_delay,
+		(ParamInt<px4::params::COM_POS_FS_PROB>) _failsafe_pos_probation,
+		(ParamInt<px4::params::COM_POS_FS_GAIN>) _failsafe_pos_gain,
 	)
+
+	// Subscriptions
+	Subscription<mission_result_s> _mission_result_sub;
+	Subscription<vehicle_global_position_s> _global_position_sub;
+	Subscription<vehicle_local_position_s> _local_position_sub;
+
+
+	static constexpr int64_t sec_to_usec = (1000 * 1000);
+	const int64_t POSVEL_PROBATION_MIN = 1 * sec_to_usec;	/**< minimum probation duration (usec) */
+	const int64_t POSVEL_PROBATION_MAX = 100 * sec_to_usec;	/**< maximum probation duration (usec) */
+
+	hrt_abstime	_last_gpos_fail_time_us{0};	/**< Last time that the global position validity recovery check failed (usec) */
+	hrt_abstime	_last_lpos_fail_time_us{0};	/**< Last time that the local position validity recovery check failed (usec) */
+	hrt_abstime	_last_lvel_fail_time_us{0};	/**< Last time that the local velocity validity recovery check failed (usec) */
+
+	// Probation times for position and velocity validity checks to pass if failed
+	hrt_abstime	_gpos_probation_time_us = POSVEL_PROBATION_MIN;
+	hrt_abstime	_lpos_probation_time_us = POSVEL_PROBATION_MIN;
+	hrt_abstime	_lvel_probation_time_us = POSVEL_PROBATION_MIN;
 
 	bool handle_command(vehicle_status_s *status_local, const vehicle_command_s &cmd,
 			    actuator_armed_s *armed_local, home_position_s *home, orb_advert_t *home_pub, orb_advert_t *command_ack_pub, bool *changed);
 
 	bool set_home_position(orb_advert_t &homePub, home_position_s &home, bool set_alt_only_to_lpos_ref);
-
-	// Set the main system state based on RC and override device inputs
-	transition_result_t set_main_state(const vehicle_status_s &status, bool *changed);
-
-	// Enable override (manual reversion mode) on the system
-	transition_result_t set_main_state_override_on(const vehicle_status_s &status_local, bool *changed);
-
-	// Set the system main state based on the current RC inputs
-	transition_result_t set_main_state_rc(const vehicle_status_s &status_local, bool *changed);
 
 	// Set the main system state based on RC and override device inputs
 	transition_result_t set_main_state(vehicle_status_s *status, bool *changed);
@@ -149,8 +163,6 @@ private:
 	// publisher
 	orb_advert_t _vehicle_cmd_pub = nullptr;
 
-	// subscriptions
-	Subscription<mission_result_s> _mission_result_sub;
 };
 
 #endif /* COMMANDER_HPP_ */
