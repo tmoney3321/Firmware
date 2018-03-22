@@ -39,6 +39,7 @@
 #include <controllib/blocks.hpp>
 #include <px4_module.h>
 #include <px4_module_params.h>
+#include <mathlib/mathlib.h>
 
 // publications
 #include <uORB/Publication.hpp>
@@ -96,7 +97,7 @@ private:
 
 		(ParamInt<px4::params::COM_POS_FS_DELAY>) _failsafe_pos_delay,
 		(ParamInt<px4::params::COM_POS_FS_PROB>) _failsafe_pos_probation,
-		(ParamInt<px4::params::COM_POS_FS_GAIN>) _failsafe_pos_gain,
+		(ParamInt<px4::params::COM_POS_FS_GAIN>) _failsafe_pos_gain
 	)
 
 	// Subscriptions
@@ -118,8 +119,8 @@ private:
 	hrt_abstime	_lpos_probation_time_us = POSVEL_PROBATION_MIN;
 	hrt_abstime	_lvel_probation_time_us = POSVEL_PROBATION_MIN;
 
-	bool handle_command(vehicle_status_s *status_local, const vehicle_command_s &cmd,
-			    actuator_armed_s *armed_local, home_position_s *home, orb_advert_t *home_pub, orb_advert_t *command_ack_pub, bool *changed);
+	bool handle_command(vehicle_status_s *status, const vehicle_command_s &cmd,
+			    actuator_armed_s *armed, home_position_s *home, orb_advert_t *home_pub, orb_advert_t *command_ack_pub, bool *changed);
 
 	bool set_home_position(orb_advert_t &homePub, home_position_s &home, bool set_alt_only_to_lpos_ref);
 
