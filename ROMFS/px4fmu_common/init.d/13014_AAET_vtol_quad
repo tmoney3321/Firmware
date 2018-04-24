@@ -11,10 +11,10 @@
 # @output MAIN2 motor 2
 # @output MAIN3 motor 3
 # @output MAIN4 motor 4
-# @output AUX1 Aileron 1
-# @output AUX2 Aileron 2
-# @output AUX3 Elevator
-# @output AUX4 Throttle
+# @output MAIN5 Aileron 1
+# @output MAIN6 Aileron 2
+# @output MAIN7 Elevator
+# @output MAIN8 Throttle
 #
 
 sh /etc/init.d/rc.vtol_defaults
@@ -29,7 +29,8 @@ set MIXER quad_x
 set PWM_OUT 1234
 set PWM_RATE 400
 
-set MIXER_AUX vtol_AAET
+set MIXER vtol_AAET
+set PWM_OUT 5678
 set PWM_ACHDIS 5
 set PWM_AUX_DISARMED 950
 
