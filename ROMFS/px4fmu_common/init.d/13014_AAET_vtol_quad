@@ -25,7 +25,7 @@ then
 	param set VT_MOT_COUNT 4
 fi
 
-set MIXER quad_h_vtol
+set MIXER quad_x
 set PWM_OUT 1234
 set PWM_RATE 400
 
