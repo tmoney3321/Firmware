@@ -61,6 +61,6 @@ then
 	param set VT_TYPE 2
 fi
 
-set MIXER quad_x_vtol
+set MIXER steve
 set PWM_OUT 12345678
 set PWM_RATE 400
