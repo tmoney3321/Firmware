@@ -63,4 +63,4 @@ fi
 
 set MIXER steve
 set PWM_OUT 12345678
-set PWM_RATE 400
+set PWM_RATE 50
